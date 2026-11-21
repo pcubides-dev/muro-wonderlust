@@ -378,6 +378,7 @@ body:not(.team) .sticky textarea{pointer-events:none}
 #brand{cursor:pointer;font:inherit;border:1px solid var(--ui-line);left:16px;top:16px;padding:8px 16px 8px 12px;display:flex;align-items:center;gap:12px}
 #brand img{height:18px;width:auto}
 #brand .s{font-family:var(--body);font-size:13px;color:var(--ui-text);opacity:.8}
+#navTab{display:none}
 #top{right:16px;top:16px;display:flex;align-items:center;gap:8px;padding:4px 4px 4px 12px}
 .switch{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;background:transparent;border:0;color:inherit;font-family:var(--body);font-size:13px;padding:4px 8px;border-radius:999px}
 .switch .plate{width:26px;height:42px;border-radius:5px;background:linear-gradient(var(--crema),var(--gris-ph));box-shadow:inset 0 0 0 2px var(--hair),0 2px 4px var(--deco-sombra);position:relative}
@@ -536,56 +537,66 @@ body.team #team{display:flex}
 
 /* ---------- celular: capítulos apilados ---------- */
 @media (max-width:760px){
-  html,body{overflow-x:hidden}
-  body{overflow-y:auto}
-  #studio{overflow:hidden;inset:0}
-  #viewport{position:static;overflow:visible;cursor:default;touch-action:auto;padding:120px 0 120px}
+  /* en celular el muro deja de ser un lienzo y se lee como una página larga, capítulo por capítulo */
+  html,body{height:auto;overflow:visible;touch-action:auto;overscroll-behavior:auto;-webkit-text-size-adjust:100%}
+  #studio{position:fixed;inset:0;overflow:hidden}
+  #viewport{position:static;overflow:visible;cursor:default;touch-action:auto;padding:64px 0 96px}
   #wall{position:static;width:auto !important;height:auto !important;transform:none !important}
+  .ch{position:static;display:flex;flex-wrap:wrap;gap:16px 12px;padding:28px 14px 40px;align-items:flex-start;justify-content:center;scroll-margin-top:60px}
+  .ch .glass,.ch .arrow,.ch .obj,#strokes{display:none}
   .ch .glass{height:auto !important}
+  .ch .it{position:static !important;transform:rotate(calc(var(--r,0deg) * .3)) !important;max-width:100%;width:auto}
+  .ch .it img,.ch .it video{max-width:100%}
+  .ch .label{width:100%;white-space:normal;margin-bottom:4px;padding-top:14px}
+  .ch .label .k{left:-6px;top:-8px;width:42px;height:42px;font-size:19px}
+  .ch .label .t{font-size:clamp(34px,11vw,52px);line-height:.95;word-break:break-word}
+  .ch .label .s{font-size:22px}
+  .deco.tp.corner{right:-8px} .deco.tp.corner2{left:-8px}
   .colgado{position:static !important;transform:none !important;width:100% !important;max-width:420px}
   .sheet,.casos{max-width:100% !important;width:auto !important}
   .casos .chead{flex-direction:column}
   .casos .cols{grid-template-columns:1fr}
   .casos .cl{min-height:0}
-  .refcine .cases{grid-template-columns:1fr}
   .refcine .cases{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .it.kitframe{width:100% !important}
-  .it.kitframe .fwrap{width:100%;height:75vh}
-  .it.kitframe iframe{width:100%;height:100%;transform:none}
-  .it.kitframe .fbar{font-size:22px;padding:12px 14px}
-  .it .idel,.it .idup{top:4px}
-  .ch{position:static;display:flex;flex-wrap:wrap;gap:18px 14px;padding:26px 16px 36px;align-items:flex-start;justify-content:center}
-  .ch .glass,.ch .arrow,.ch .obj,#strokes{display:none}
-  .ch .it{position:static !important;transform:rotate(calc(var(--r,0deg) * .35)) !important;max-width:100%}
-  .ch .label{width:100%;white-space:normal;margin-bottom:6px}
-  .deco.tp.corner{right:-8px} .deco.tp.corner2{left:-8px}
-  .ch .label{padding-top:16px}
-  .ch .label .k{left:-8px;top:-10px;width:48px;height:48px;font-size:22px}
-  .ch .label .t{font-size:64px}
-  .ch .label .s{font-size:26px}
-  .note{font-size:30px;max-width:100% !important} .note.big{font-size:40px}
-  .paper{max-width:100% !important;font-size:26px}
+  .note{font-size:24px;max-width:100% !important} .note.big{font-size:30px}
+  .paper{max-width:100% !important;font-size:21px}
   .anat .anat-grid,.bad .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .board{padding:14px}
+  .board{padding:12px}
   .bgrid12{grid-template-columns:1fr}
   .c2,.c3,.c4{grid-column:span 1}
-  .cell.img{min-height:220px}
-  .cut{font-size:48px}
+  .cell.img{min-height:200px}
+  .cut{font-size:40px}
   .frame{max-width:100% !important}
   .sticky{position:static !important;transform:rotate(-1deg) !important}
   .film{width:100% !important;height:auto !important;display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--negro-cine);border-radius:6px}
   .film img.strip{display:none}
   .film .fr{position:static !important;width:calc(50% - 4px) !important;height:auto !important;aspect-ratio:3/2}
   .film .fc{position:static !important;width:50%;color:var(--crema);font-size:18px;order:1}
-  #brand{left:12px;top:12px} #brand .s{display:none}
-  #nav{left:10px;bottom:12px;width:150px;padding:18px 10px 10px;gap:0}
-  #nav button{font-size:15px;padding:1px 4px}
+  /* el kit embebido no cabe en un celular: se abre aparte */
+  .it.kitframe{width:100% !important}
+  .it.kitframe .fwrap{display:none}
+  .it.kitframe .fbar{font-size:20px;padding:16px 14px;justify-content:center;text-align:center}
+  .it .idel,.it .idup{top:4px}
+  /* barra superior compacta: logo a la izquierda, luz y modo equipo a la derecha */
+  #brand{left:10px;top:10px;padding:6px 10px;gap:0} #brand .s{display:none} #brand .mark{height:16px}
+  #top{right:10px;top:10px;padding:3px 3px 3px 6px;gap:4px}
+  .switch{gap:0;padding:4px} .switch .lbl{display:none}
+  #teamBtn{font-size:12px;padding:7px 10px}
+  #hint,#zoom{display:none}
+  /* el índice se guarda detrás de una pestaña abajo a la derecha */
+  #nav{display:none;left:auto;right:12px;bottom:66px;width:210px;padding:24px 10px 10px;gap:0;max-height:60vh;overflow:auto}
+  #nav.open{display:flex}
+  #nav button{font-size:16px;padding:3px 4px}
   #nav::after{font-size:12px}
   #nav::before{width:60px;height:18px;top:-8px}
-  #top{right:12px;top:12px}
-  #hint{display:none}
-  #nav{bottom:14px;left:12px;width:200px;padding-top:26px}
-  #zoom{display:none}
+  #navTab{display:inline-flex;position:fixed;right:12px;bottom:14px;z-index:var(--z-hud);font-family:var(--hand);font-size:19px;padding:8px 16px;cursor:pointer;color:inherit}
+  #navTab.open{background:var(--gold)}
+  #team{left:10px;right:10px;bottom:10px;flex-wrap:wrap;gap:6px;padding:6px 8px;justify-content:center}
+  #team .who{font-size:11px;width:100%;text-align:center}
+  #team .btn{font-size:12px;padding:7px 10px}
+  #lightbox .card{width:96vw;max-height:92vh;padding:10px 10px 18px}
+  #lightbox .lb-note{font-size:28px} #lightbox .lb-cap{font-size:24px}
+  .modal .card{width:94vw;padding:20px 16px}
 }
 @media (prefers-reduced-motion:reduce){ *{transition:none !important;animation:none !important} }
 </style>
@@ -609,6 +620,7 @@ body.team #team{display:flex}
 </div>
 
 <div id="nav" aria-label="Capítulos del muro"></div>
+<button type="button" class="hud" id="navTab" aria-controls="nav" aria-expanded="false">índice</button>
 <div id="stripe"></div>
 <div class="hud" id="zoom">
   <button type="button" id="zoomOut" aria-label="Alejar">−</button>
@@ -1255,7 +1267,9 @@ function animateTo(nx,ny,ns){
   }
   anim=requestAnimationFrame(step);
 }
+document.getElementById('navTab').addEventListener('click', ()=>{ const n=document.getElementById('nav'), t=document.getElementById('navTab'); const o=!n.classList.contains('open'); n.classList.toggle('open',o); t.classList.toggle('open',o); t.setAttribute('aria-expanded', o?'true':'false'); });
 function goChapter(i){
+  if(isStack()){ document.getElementById('nav').classList.remove('open'); document.getElementById('navTab').classList.remove('open'); }
   const c = CH[i]; const vw=vp.clientWidth, vh=vp.clientHeight;
   const ns = clampScale(Math.min(vw/(c.w+120), vh/(c.h+120)));
   const nx = vw/2 - (c.x + c.w/2)*ns, ny = vh/2 - (c.y + c.h/2)*ns;
@@ -1388,7 +1402,14 @@ try{ const t=JSON.parse(localStorage.getItem('wl_team')||'null'); if(t&&t.name!=
 
 let placing=false;
 function togglePlacing(v){ placing = v===undefined ? !placing : v; vp.classList.toggle('placing',placing); document.getElementById('placeBtn').textContent = placing?'Toca el muro…':'Pegar post-it'; }
-document.getElementById('placeBtn').addEventListener('click',()=>togglePlacing());
+document.getElementById('placeBtn').addEventListener('click',()=>{
+  if(isStack()){ /* en celular no hay dónde "tocar el muro": el post-it cae en el capítulo que se está viendo */
+    placeSticky(innerWidth/2, innerHeight/2);
+    const all=[...stickies.values()]; const last=all[all.length-1]; if(last){ last.el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>{ const t=last.el.querySelector('textarea'); if(t) t.focus(); }, 500); }
+    return;
+  }
+  togglePlacing();
+});
 
 const stickies = new Map();
 let store = null;
@@ -1397,7 +1418,11 @@ function chapterFor(x,y){ for(let i=0;i<CH.length;i++){ const c=CH[i]; if(x>=c.x
 function uid(){ return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
 function placeSticky(cx,cy){
-  const p = wallPoint(cx,cy);
+  let p = wallPoint(cx,cy);
+  if(isStack()){ /* en celular el post-it cae en el capítulo que se tocó */
+    let i=-1, best=1e9; chEls.forEach((g,j)=>{ const r=g.getBoundingClientRect(); const d = cy<r.top ? r.top-cy : cy>r.bottom ? cy-r.bottom : 0; if(d<best){ best=d; i=j; } }); const c = CH[Math.max(0,i)];
+    p = { x: c.x + 140 + Math.random()*60, y: c.y + 260 + Math.random()*40 };
+  }
   const data = { x:Math.round(p.x-115), y:Math.round(p.y-80), text:'', color:(()=>{ const v=parseInt(localStorage.getItem('wl_sticky_color')); return isNaN(v)?0:v; })(), r:(Math.random()*8-4).toFixed(1), who:teamName, ts:Date.now() };
   const id = uid(); upsertSticky(id,data,true); persist(id,data); togglePlacing(false);
 }
