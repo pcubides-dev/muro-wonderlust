@@ -922,14 +922,26 @@ async function ghUpload(file){
   if(!ghToken) throw new Error('sin sesión');
   const isVid = file.type.startsWith('video'); let blob=file, ext=(file.name.split('.').pop()||'bin').toLowerCase();
   if(!isVid && file.type!=='image/gif' && file.type!=='image/svg+xml'){
-    try{ const bmp=await createImageBitmap(file); const M=1600; const k=Math.min(1, M/Math.max(bmp.width,bmp.height)); const c=document.createElement('canvas'); c.width=Math.round(bmp.width*k); c.height=Math.round(bmp.height*k); c.getContext('2d').drawImage(bmp,0,0,c.width,c.height); blob = await new Promise(r=>c.toBlob(r, file.type==='image/png' && bmp.width*bmp.height<4e6 ? 'image/png' : 'image/jpeg', 0.86)); ext = blob.type==='image/png' ? 'png' : 'jpg'; }catch(_){}
+    try{ const bmp=await createImageBitmap(file); const M=1600; const k=Math.min(1, M/Math.max(bmp.width,bmp.height)); const c=document.createElement('canvas'); c.width=Math.round(bmp.width*k); c.height=Math.round(bmp.height*k); c.getContext('2d').drawImage(bmp,0,0,c.width,c.height); blob = await new Promise(r=>c.toBlob(r, file.type==='image/png' && bmp.width*bmp.height<1.2e6 ? 'image/png' : 'image/jpeg', 0.86)); ext = blob.type==='image/png' ? 'png' : 'jpg'; }catch(_){}
   }
   if(blob.size > 45*1024*1024) throw new Error('el archivo pasa de 45 MB');
   const path = 'u/'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)+'.'+ext;
   const content = await blobToB64(blob);
   await ghPutFile(path, content, `muro: ${ghUser||'equipo'} sube ${file.name}`);
+  try{ localBlobs.set(path, URL.createObjectURL(blob)); }catch(_){}
   return {id:path, url:path, sizeBytes:blob.size, contentType:blob.type};
 }
+const localBlobs = new Map();
+const RAW = 'https://raw.githubusercontent.com/'+GH.owner+'/'+GH.repo+'/'+GH.branch+'/';
+/* un archivo recién subido tarda uno o dos minutos en aparecer en Pages: mientras, se intenta por raw y se reintenta */
+document.addEventListener('error', ev=>{
+  const m=ev.target; if(!m || !(m.tagName==='IMG'||m.tagName==='VIDEO')) return;
+  const cur=m.getAttribute('src')||''; const rel=(m.dataset.orig || cur.replace(RAW,'')).split('?')[0];
+  if(!/^u\//.test(rel)) return;
+  m.dataset.orig=rel; const n=(+m.dataset.try||0)+1; if(n>40) return; m.dataset.try=n;
+  const alt = n%2 ? RAW+rel : rel+'?r='+Date.now();
+  setTimeout(()=>{ m.src=alt; if(m.tagName==='VIDEO') m.load(); }, n<=2 ? 1500 : 15000);
+}, true);
 let assetsApi = null;
 function ghEnable(){ assetsApi = ghToken ? {upload:ghUpload, delete:async()=>({deleted:false})} : null; capState.db=!!ghToken; capState.assets=!!ghToken; updateCapHud(); }
 /* aplicar lo que hay en el repo (lo de otros) sin pisar lo que este navegador está guardando */
@@ -1500,7 +1512,7 @@ const localColgados = {
   save(id,d){ const all=this.load(); all[id]=d; try{ localStorage.setItem(this.key,JSON.stringify(all)); }catch(_){} },
   remove(id){ const all=this.load(); delete all[id]; try{ localStorage.setItem(this.key,JSON.stringify(all)); }catch(_){} }
 };
-function colgadoSrc(d){ return d.src || d.asset || ''; }
+function colgadoSrc(d){ const p=d.src || d.asset || ''; return localBlobs.get(p) || p; }
 function upsertColgado(id,data){
   let rec = colgados.get(id);
   if(!rec){
