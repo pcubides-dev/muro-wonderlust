@@ -1,0 +1,15 @@
+/* Wonderlust · tokens de marca · 2026 */
+:root{
+  --wl-crema:#F3F1ED; --wl-tinta:#16161B; --wl-amarillo:#F6B60E; --wl-morado:#7B48F6;
+  --wl-lila:#BFA3EA;           /* morado como luz: vetas, cáusticas, brillos; nunca texto sobre crema */
+  --wl-amarillo-tinta:#946500; /* amarillo para texto pequeño sobre crema (4,5:1) */
+  --wl-gris:#45424F;           /* texto secundario sobre crema (8,7:1) */
+  --wl-papel:#FBFAF7;          /* blanco de papel: nunca #fff */
+  --wl-noche:#141317;          /* fondo del estudio apagado */
+  --wl-rojo:#D9452B;           /* solo para tachar y para errores */
+  --wl-display:Tanker,"Arial Narrow",Impact,sans-serif;
+  --wl-body:Satoshi,Arial,system-ui,sans-serif;
+  --wl-mono:"Chivo Mono",ui-monospace,Menlo,monospace;
+  --wl-radius:14px; --wl-pill:999px;
+  --wl-ease:cubic-bezier(.16,1,.3,1);
+}

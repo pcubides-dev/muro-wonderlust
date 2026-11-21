@@ -1,0 +1,30 @@
+{
+ "colores": {
+  "tinta": "#16161B",
+  "crema": "#F3F1ED",
+  "amarillo": "#F6B60E",
+  "lima": "#C8F31D"
+ },
+ "archivos": [
+  "logo-apilado_amarillo_sobre-tinta.svg",
+  "logo-apilado_crema_sobre-tinta.svg",
+  "logo-apilado_tinta.svg",
+  "logo-apilado_tinta_sobre-crema.svg",
+  "logo-completo_amarillo_sobre-tinta.svg",
+  "logo-completo_crema_sobre-tinta.svg",
+  "logo-completo_tinta.svg",
+  "logo-completo_tinta_sobre-crema.svg",
+  "logo-horizontal_amarillo_sobre-tinta.svg",
+  "logo-horizontal_crema_sobre-tinta.svg",
+  "logo-horizontal_tinta.svg",
+  "logo-horizontal_tinta_sobre-crema.svg",
+  "simbolo_amarillo_sobre-tinta.svg",
+  "simbolo_crema_sobre-tinta.svg",
+  "simbolo_tinta.svg",
+  "simbolo_tinta_sobre-crema.svg",
+  "wordmark-horizontal_amarillo_sobre-tinta.svg",
+  "wordmark-horizontal_crema_sobre-tinta.svg",
+  "wordmark-horizontal_tinta.svg",
+  "wordmark-horizontal_tinta_sobre-crema.svg"
+ ]
+}

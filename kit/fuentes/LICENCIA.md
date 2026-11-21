@@ -1,0 +1,1 @@
+Tanker y Satoshi son de Fontshare (Indian Type Foundry), licencia ITF Free Font License: gratis para uso comercial, sin modificar ni redistribuir los archivos fuera del equipo. Cada persona descarga la suya en fontshare.com. Chivo Mono: Google Fonts, OFL.
