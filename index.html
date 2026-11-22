@@ -388,16 +388,21 @@ html[data-theme="on"] .switch .plate i{transform:translateY(0);background:linear
 .switch .lbl small{opacity:.7;font-size:12px}
 .btn{border:0;background:transparent;color:inherit;padding:8px 16px;border-radius:999px;font-family:var(--body);font-size:13px;font-weight:700;cursor:pointer;transition:background .3s var(--ease),transform .15s var(--ease)}
 .btn:hover,.switch:hover{background:var(--ui-hover)}
-.btn:active,.switch:active,#nav button:active,#zoom button:active{transform:scale(.96)}
+.btn:active,.switch:active,#nav button:not(.navtape):active,#zoom button:active{transform:scale(.96)}
 .btn.primary{background:var(--gold);color:var(--tinta)}
 .btn.primary:hover{background:var(--gold-hover)}
 #nav{position:fixed;z-index:var(--z-hud);left:22px;bottom:26px;width:206px;padding:26px 16px 14px;background:var(--blanco);color:var(--tinta);box-shadow:var(--shadow);transform:rotate(-1.6deg);transform-origin:50% 0;display:flex;flex-direction:column;gap:2px;font-family:var(--hand);max-height:calc(100vh - 120px);overflow:auto}
-#nav::before{content:"";position:absolute;left:50%;top:-12px;width:92px;height:26px;transform:translateX(-50%) rotate(2deg);background:var(--tape-gold);opacity:.95;clip-path:polygon(2% 0,98% 4%,100% 100%,0 96%)}
-#nav::after{content:"índice";position:absolute;right:14px;top:8px;font-size:15px;opacity:.55}
-#nav button{border:0;background:transparent;color:inherit;padding:2px 6px;text-align:left;font-family:var(--hand);font-size:19px;line-height:1.1;white-space:nowrap;cursor:pointer;display:flex;gap:10px;align-items:baseline;border-radius:4px;transition:transform .15s var(--ease)}
-#nav button b{font-weight:500;color:var(--gold-ink);font-variant-numeric:tabular-nums;min-width:22px}
-#nav button:hover{transform:translateX(3px)}
-#nav button.on{background:linear-gradient(transparent 55%,var(--gold) 55%,var(--gold) 92%,transparent 92%)}
+/* la cinta del índice es un botón: con un clic la nota se recoge y queda solo la cinta pegada */
+#nav .navtape{display:block;position:absolute;left:50%;top:3px;width:96px;height:26px;transform:translateX(-50%) rotate(1.5deg);background:var(--tape-gold);opacity:.95;clip-path:polygon(1% 0,99% 3%,100% 100%,0 97%);border:0;padding:0;margin:0;cursor:pointer;font-family:var(--hand);font-size:15px;line-height:26px;color:var(--tinta);text-align:center}
+#nav .navtape:hover{opacity:1}
+#nav .navtape:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+#nav.min{width:120px;height:0;padding:0;background:transparent;box-shadow:none;overflow:visible;transform:none;gap:0}
+#nav.min button:not(.navtape){display:none}
+#nav.min .navtape{top:auto;bottom:0;left:0;transform:rotate(-2deg);width:124px;height:34px;line-height:34px;font-size:18px;padding-left:4px}
+#nav button:not(.navtape){border:0;background:transparent;color:inherit;padding:2px 6px;text-align:left;font-family:var(--hand);font-size:19px;line-height:1.1;white-space:nowrap;cursor:pointer;display:flex;gap:10px;align-items:baseline;border-radius:4px;transition:transform .15s var(--ease)}
+#nav button:not(.navtape) b{font-weight:500;color:var(--gold-ink);font-variant-numeric:tabular-nums;min-width:22px}
+#nav button:not(.navtape):hover{transform:translateX(3px)}
+#nav button:not(.navtape).on{background:linear-gradient(transparent 55%,var(--gold) 55%,var(--gold) 92%,transparent 92%)}
 html[data-theme="off"] #nav{background-color:var(--papel-amarillo)}
 
 
@@ -586,9 +591,8 @@ body.team #team{display:flex}
   /* el índice se guarda detrás de una pestaña abajo a la derecha */
   #nav{display:none;left:auto;right:12px;bottom:66px;width:210px;padding:24px 10px 10px;gap:0;max-height:60vh;overflow:auto}
   #nav.open{display:flex}
-  #nav button{font-size:16px;padding:3px 4px}
-  #nav::after{font-size:12px}
-  #nav::before{width:60px;height:18px;top:-8px}
+  #nav.min{width:210px;height:auto;padding:24px 10px 10px;background:var(--blanco);box-shadow:var(--shadow)} #nav.min button:not(.navtape){display:flex} #nav.min .navtape{top:3px;bottom:auto;left:50%;transform:translateX(-50%) rotate(1.5deg);width:96px;height:26px;line-height:26px;font-size:15px;padding-left:0}
+  #nav button:not(.navtape){font-size:16px;padding:3px 4px}
   #navTab{display:inline-flex;position:fixed;right:12px;bottom:14px;z-index:var(--z-hud);font-family:var(--hand);font-size:19px;padding:8px 16px;cursor:pointer;color:inherit}
   #navTab.open{background:var(--gold)}
   #team{left:10px;right:10px;bottom:10px;flex-wrap:wrap;gap:6px;padding:6px 8px;justify-content:center}
@@ -619,7 +623,7 @@ body.team #team{display:flex}
   <button type="button" id="diagDot" aria-label="Estado de la conexión" title="Solo lectura"></button>
 </div>
 
-<div id="nav" aria-label="Capítulos del muro"></div>
+<div id="nav" aria-label="Capítulos del muro"><button type="button" class="navtape" id="navFold" title="Recoger o abrir el índice" aria-expanded="true">índice</button></div>
 <button type="button" class="hud" id="navTab" aria-controls="nav" aria-expanded="false">índice</button>
 <div id="stripe"></div>
 <div class="hud" id="zoom">
@@ -1270,6 +1274,11 @@ function animateTo(nx,ny,ns){
   }
   anim=requestAnimationFrame(step);
 }
+(function(){ const n=document.getElementById('nav'), f=document.getElementById('navFold');
+  function setMin(m){ n.classList.toggle('min',m); f.setAttribute('aria-expanded', m?'false':'true'); try{ localStorage.setItem('wl_nav_min', m?'1':'0'); }catch(_){} }
+  f.addEventListener('click', ()=>{ if(isStack()){ n.classList.remove('open'); document.getElementById('navTab').classList.remove('open'); return; } setMin(!n.classList.contains('min')); });
+  try{ if(localStorage.getItem('wl_nav_min')==='1' && !isStack()) setMin(true); }catch(_){}
+})();
 document.getElementById('navTab').addEventListener('click', ()=>{ const n=document.getElementById('nav'), t=document.getElementById('navTab'); const o=!n.classList.contains('open'); n.classList.toggle('open',o); t.classList.toggle('open',o); t.setAttribute('aria-expanded', o?'true':'false'); });
 function goChapter(i){
   if(isStack()){ document.getElementById('nav').classList.remove('open'); document.getElementById('navTab').classList.remove('open'); }
