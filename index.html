@@ -487,8 +487,16 @@ body.team #resetBtn{display:inline-block}
 .it.kitframe{background:var(--blanco);box-shadow:var(--shadow);border-radius:8px;overflow:hidden}
 .it.kitframe .fbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 28px;font-family:var(--hand);font-size:34px;color:var(--tinta);background:var(--crema);border-bottom:1px solid var(--hair)}
 .it.kitframe .fbar a{color:var(--tinta);font-family:var(--body);font-size:22px;font-weight:700;text-decoration:none;background:linear-gradient(transparent 60%,var(--gold) 60%,var(--gold) 92%,transparent 92%);padding:0 4px}
-.it.kitframe .fwrap{width:6400px;height:2240px;overflow:hidden;position:relative}
-.it.kitframe iframe{width:1600px;height:560px;border:0;transform:scale(4);transform-origin:0 0;display:block;background:var(--crema)}
+.it.kitframe .fwrap{width:6400px;height:2240px;overflow:hidden;position:relative;display:block;cursor:pointer;text-decoration:none}
+/* el kit es solo una vista previa dentro del muro: no roba la rueda ni el arrastre; se abre aparte */
+.it.kitframe iframe{width:1600px;height:560px;border:0;transform:scale(4);transform-origin:0 0;display:block;background:var(--crema);pointer-events:none}
+.it.kitframe .fwrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:520px;background:linear-gradient(transparent,var(--blanco))}
+.it.kitframe .fopen{position:absolute;left:50%;bottom:160px;transform:translateX(-50%);z-index:2;background:var(--tinta);color:var(--crema);font-family:var(--body);font-weight:700;font-size:56px;padding:34px 70px;border-radius:999px;box-shadow:var(--shadow);white-space:nowrap}
+.it.kitframe .fwrap:hover .fopen{background:var(--gold);color:var(--tinta)}
+.it.kitframe .fzips{display:flex;flex-wrap:wrap;gap:16px;padding:22px 28px 26px;background:var(--blanco);border-bottom:1px solid var(--hair)}
+.it.kitframe .fzips a{display:inline-block;background:var(--gold);color:var(--tinta);font-family:var(--body);font-weight:700;font-size:26px;padding:14px 26px;border-radius:999px;text-decoration:none}
+.it.kitframe .fzips a:hover{background:var(--tinta);color:var(--crema)}
+.it.kitframe .fzips span{font-family:var(--hand);font-size:30px;color:var(--tinta);align-self:center;margin-right:10px}
 #diagDot{width:14px;height:14px;border-radius:50%;border:0;background:var(--hair);cursor:pointer;margin-left:4px;flex:none}
 #diagDot.ok{background:var(--papel-lima);box-shadow:0 0 0 2px var(--ui-line) inset}
 #diagDot.saving{background:var(--gold)}
@@ -580,6 +588,7 @@ body.team #team{display:flex}
   /* el kit embebido no cabe en un celular: se abre aparte */
   .it.kitframe{width:100% !important}
   .it.kitframe .fwrap{display:none}
+  .it.kitframe .fzips{padding:12px;gap:8px} .it.kitframe .fzips a{font-size:14px;padding:9px 14px} .it.kitframe .fzips span{font-size:20px;width:100%}
   .it.kitframe .fbar{font-size:20px;padding:16px 14px;justify-content:center;text-align:center}
   .it .idel,.it .idup{top:4px}
   /* barra superior compacta: logo a la izquierda, luz y modo equipo a la derecha */
@@ -838,7 +847,13 @@ const ITEMS = [
  {c:9,type:'photo',x:4020,y:4060,w:520,h:780,r:-2,tape:'gold',src:'a/tex-polvo-dorado-violeta.jpg',cap:'polvo dorado y violeta',meta:'textura · PNG original en el kit'},
  {c:9,type:'photo',x:4600,y:4080,w:520,h:780,r:2,tape:'',src:'a/tex-polvo-negro-violeta.jpg',cap:'polvo negro y violeta',meta:'textura · PNG original en el kit'},
  {c:9,type:'paper',x:5200,y:4120,w:1200,r:-1,torn:2,tape:'gold',text:'Lo que ya tiene archivo está abajo con su botón de descarga, por pieza o por paquete. Lo que todavía no tiene archivo grande (doce texturas de la hoja) se ve aquí como referencia hasta que lleguen los originales.'},
- {c:9,type:'frame',x:160,y:4930,w:6400,src:'kit/index.html',text:'Kit de marca Wonderlust · se desplaza con la rueda · cada tarjeta tiene su descarga'},
+ {c:9,type:'frame',x:160,y:4930,w:6400,src:'kit/index.html',text:'Kit de marca Wonderlust · vista previa; se abre en una pestaña aparte',zips:[
+   {href:'kit/descargas/wonderlust_logo.zip',file:'wonderlust_logo.zip',label:'Logo, juegos y color · 13 MB'},
+   {href:'kit/descargas/wonderlust_sistema-grafico.zip',file:'wonderlust_sistema-grafico.zip',label:'Umbral, onda, patrones, retículas, fuentes y tokens · 2 MB'},
+   {href:'kit/descargas/wonderlust_iconos.zip',file:'wonderlust_iconos.zip',label:'Íconos · 18 MB'},
+   {href:'kit/descargas/wonderlust_texturas.zip',file:'wonderlust_texturas.zip',label:'Texturas JPG · 4 MB'},
+   {href:'kit/descargas/wonderlust_texturas-originales.zip',file:'wonderlust_texturas-originales.zip',label:'Texturas PNG originales · 14 MB'},
+   {href:'kit/descargas/wonderlust_motion.zip',file:'wonderlust_motion.zip',label:'Motion · 2 MB'}]},
 ];
 
 /* trazos a lápiz: uniones entre ideas, círculos y subrayados (coordenadas del muro) */
@@ -1070,7 +1085,8 @@ function render(it){
       break; }
     case 'frame':
       e = el('div','it kitframe'); e.style.width=it.w+'px';
-      e.innerHTML = `<div class="fbar"><span>${esc(it.text||'')}</span><a href="${esc(it.src)}" target="_blank" rel="noopener">abrir en pestaña aparte ↗</a></div><div class="fwrap"><iframe src="${esc(it.src)}" loading="lazy" title="${esc(it.text||'')}"></iframe></div>`;
+      const zips = (it.zips||[]).map(z=>`<a href="${esc(z.href)}" download="${esc(z.file)}">${esc(z.label)}</a>`).join('');
+      e.innerHTML = `<div class="fbar"><span>${esc(it.text||'')}</span><a href="${esc(it.src)}" target="_blank" rel="noopener">abrir en pestaña aparte ↗</a></div>${zips?`<div class="fzips"><span>descargar:</span>${zips}</div>`:''}<a class="fwrap" href="${esc(it.src)}" target="_blank" rel="noopener" aria-label="Abrir el kit de marca"><iframe src="${esc(it.src)}" loading="lazy" tabindex="-1" title="${esc(it.text||'')}"></iframe><span class="fopen">Abrir el kit de marca ↗</span></a>`;
       break;
     case 'ghost':
       e = el('div','it sticky ghost',esc(it.text)); break;
